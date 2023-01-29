@@ -55,8 +55,25 @@ void simpleHighway(pcl::visualization::PCLVisualizer::Ptr& viewer)
    
     std::shared_ptr<ProcessPointClouds<pcl::PointXYZ>> p_point_cloud_processor = std::make_shared<ProcessPointClouds<pcl::PointXYZ>>();
     std::pair<typename pcl::PointCloud<pcl::PointXYZ>::Ptr, typename pcl::PointCloud<pcl::PointXYZ>::Ptr> segmentCloud = p_point_cloud_processor->SegmentPlane(p_point_cloud,100,0.2);
-    renderPointCloud(viewer, segmentCloud.first,"Obstacle PointCloud",Color(1,0,0));
-    renderPointCloud(viewer, segmentCloud.second,"Plane PointCloud",Color(0,1,0));
+    //renderPointCloud(viewer, segmentCloud.first,"Obstacle PointCloud",Color(1,0,0));
+    renderPointCloud(viewer, segmentCloud.second,"Plane PointCloud",Color(0.5,0.5,0.5));
+    std::vector<pcl::PointCloud<pcl::PointXYZ>::Ptr> cloudClusters = p_point_cloud_processor->Clustering(segmentCloud.first, 
+                                                                                                        1.0 /*dist. tol.*/, 3/*min num points*/,
+                                                                                                        30 /*max num points*/);
+    int clusterId = 0;
+    std::vector<Color> colors = {Color(1,0,0), Color(0,1,0), Color(0,0,1)};
+    for(pcl::PointCloud<pcl::PointXYZ>::Ptr cluster : cloudClusters)
+    {
+        std::cout << "cluster size ";
+        p_point_cloud_processor->numPoints(cluster);
+        int colorId = clusterId%colors.size();
+        renderPointCloud(viewer, cluster, "obstCloud"+std::to_string(clusterId), colors[colorId]);
+
+        Box box = p_point_cloud_processor->BoundingBox(cluster);
+        renderBox(viewer, box, clusterId);
+        clusterId++;
+
+    }
   
 }
 
