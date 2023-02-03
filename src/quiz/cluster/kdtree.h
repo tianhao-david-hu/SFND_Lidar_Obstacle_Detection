@@ -42,8 +42,8 @@ struct KdTree
 		double dx = pt1[0] - pt2[0];
 		double dy = pt1[1] - pt2[1];
 		bool result = sqrt(dx*dx + dy*dy) <= tolerance;
-		if(result)
-			std::cout<<"Find neighbour point X:"<<pt2[0] << "Y:"<<pt2[1]<<"\n";
+		//if(result)
+		//	std::cout<<"Find neighbour point X:"<<pt2[0] << "Y:"<<pt2[1]<<"\n";
 		return result;
 	}
 
@@ -108,7 +108,7 @@ struct KdTree
 	std::vector<int> search(std::vector<float> target, float distanceTol)
 	{
 		std::vector<int> ids;
-		std::cout<<"Searching X:"<<target[0]<<" Y:"<<target[1]<<"\n";
+		//std::cout<<"Searching X:"<<target[0]<<" Y:"<<target[1]<<"\n";
 		searchHelper(target, root, 0, distanceTol, ids);
 		return ids;
 	}
